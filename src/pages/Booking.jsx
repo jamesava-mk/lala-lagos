@@ -892,10 +892,20 @@ function DateField({
   min,
   onChange,
 }) {
+  const mobileLabel =
+    label === "Arrival"
+      ? "Select arrival date"
+      : "Select departure date";
+
   return (
     <label className="group bg-[var(--color-cream)] p-6 transition-colors focus-within:bg-white sm:p-8">
       <span className="block text-[9px] font-semibold uppercase tracking-[0.18em] text-[var(--color-muted)]">
         {label}
+      </span>
+
+      {/* Mobile-only helper text */}
+      <span className="mt-3 block text-sm font-medium text-[var(--color-ink)] sm:hidden">
+        {value ? formatMobileDate(value) : mobileLabel}
       </span>
 
       <input
@@ -903,10 +913,21 @@ function DateField({
         value={value}
         min={min}
         onChange={(event) => onChange(event.target.value)}
+        aria-label={`${label} date`}
         className="mt-5 w-full bg-transparent text-xl font-medium outline-none"
       />
     </label>
   );
+}
+
+function formatMobileDate(value) {
+  if (!value) return "";
+
+  return new Intl.DateTimeFormat("en-NG", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(`${value}T00:00:00`));
 }
 
 /* ===============================================================
